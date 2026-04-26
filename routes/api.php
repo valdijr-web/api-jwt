@@ -19,7 +19,7 @@ Route::prefix('v1')->group(function () {
         // O construtor do AuthController já protege estas rotas
         Route::post('logout', [AuthController::class, 'logout']);
         Route::post('refresh', [AuthController::class, 'refresh']);
-        Route::post('me', [AuthController::class, 'me']);
+        Route::post('me', [AuthController::class, 'me'])->middleware(['auth:api']);
     });
 
      // Grupo de autenticação pública
