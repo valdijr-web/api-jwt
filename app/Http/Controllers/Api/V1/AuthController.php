@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Actions\Auth\LoginAction;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
+use Exception;
 
 class AuthController extends Controller
 {
@@ -15,18 +17,19 @@ class AuthController extends Controller
         $this->middleware('auth:api')->except(['login', 'register']);
     }
 
-    public function login(Request $request)
+    public function login(Request $request, LoginAction $loginAction)
     {
         $credentials = $request->only(['email', 'password']);
 
-        if (! $token = auth('api')->attempt($credentials)) {
-            return response()->json(['error' => 'Não autorizado'], 401);
+        try {
+            $token = $loginAction->execute($credentials);
+
+            // Cria o cookie HttpOnly contendo o JWT
+            $cookie = self::setCookie($token);
+            return $this->respondWithToken($token, $cookie);
+        } catch (Exception $e) {
+            return response()->json(['error' => $e->getMessage()], $e->getCode() ?: 401);
         }
-
-         // Cria o cookie HttpOnly contendo o JWT
-        $cookie = self::setCookie($token);
-
-        return $this->respondWithToken($token, $cookie);
     }
 
     public function me()
