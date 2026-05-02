@@ -3,77 +3,82 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Actions\Auth\LoginAction;
+use App\Actions\Auth\LogoutAction;
+use App\Actions\Auth\RefreshAction;
+use App\Actions\Auth\SetTokenCookieAction;
 use Illuminate\Http\Request;
-use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use Exception;
+use Illuminate\Http\JsonResponse;
+use \Symfony\Component\HttpFoundation\Cookie;
 
 class AuthController extends Controller
 {
     // Construtor para proteger as rotas, exceto login e registo
-    public function __construct()
-    {
-        $this->middleware('auth:api')->except(['login', 'register']);
+    public function __construct(
+        private LoginAction $loginAction,
+        private LogoutAction $logoutAction,
+        private RefreshAction $refreshAction,
+        private SetTokenCookieAction $setTokenCookieAction
+    ) {
+        $this->middleware('auth:api')->except(['login', 'register', 'refresh' ]);
     }
 
-    public function login(Request $request, LoginAction $loginAction)
+    public function login(Request $request): JsonResponse
     {
         $credentials = $request->only(['email', 'password']);
 
         try {
-            $token = $loginAction->execute($credentials);
+            $token = $this->loginAction->execute($credentials);
 
             // Cria o cookie HttpOnly contendo o JWT
-            $cookie = self::setCookie($token);
+            $cookie = $this->setTokenCookieAction->execute($token);
             return $this->respondWithToken($token, $cookie);
         } catch (Exception $e) {
             return response()->json(['error' => $e->getMessage()], $e->getCode() ?: 401);
         }
     }
 
-    public function me()
+    public function me(): JsonResponse
     {
-        return response()->json(auth('api')->user());
+        try {
+            return response()->json(auth('api')->user());
+        } catch (Exception $e) {
+            return response()->json(['error' => 'Erro ao obter usuário autenticado'], 500);
+        }
     }
 
-    public function logout()
+    public function logout(): JsonResponse
     {
-        auth('api')->logout();
-        $cookie = self::setCookie('');
-        return response()->json(['message' => 'Logout efetuado com sucesso'])->withCookie($cookie);
+        try {
+            $this->logoutAction->execute();
+            $cookie = $this->setTokenCookieAction->execute('');
+            return response()->json(['message' => 'Logout efetuado com sucesso'])->withCookie($cookie);
+        } catch (Exception $e) {
+            return response()->json(['error' => 'Erro ao efetuar logout'], 500);
+        }
     }
 
     // Esta é a função que o NextAuth chamará quando o token expirar
-    public function refresh()
+    public function refresh(): JsonResponse
     {
-        $newToken = auth('api')->refresh();
-        $cookie = self::setCookie($newToken);
-        return $this->respondWithToken($newToken, $cookie);
+        try {
+            $newToken = $this->refreshAction->execute();
+            $cookie = $this->setTokenCookieAction->execute($newToken);
+            return $this->respondWithToken($newToken, $cookie);
+        } catch (Exception $e) {
+            return response()->json(['error' => 'Erro ao atualizar token ' . $e->getMessage()], 500);
+        }
     }
 
     // Estrutura padrão de resposta do token
-    protected function respondWithToken($token, $cookie = null)
+    protected function respondWithToken($token, $cookie = null): JsonResponse
     {
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => auth()->factory()->getTTL() * 60 // Tempo em segundos
+            'expires_in' => auth()->factory()->getTTL() // Tempo em segundos
         ])->withCookie($cookie);
-    }
-
-    protected function setCookie($token)
-    {
-        return cookie(
-            'access_token',      // nome
-            $token,              // valor
-            config('jwt.ttl'),   // minutos (60)
-            '/',                 // path
-            null,                // domain (null = atual)
-            false,                // secure (HTTPS)
-            true,                // httpOnly
-            false,               // raw
-            'lax'             // sameSite
-        );
     }
 }

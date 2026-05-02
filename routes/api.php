@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\V1\AuthController;
+use App\Http\Controllers\Api\V1\TenantController;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
@@ -17,28 +18,16 @@ Route::prefix('v1')->group(function () {
     Route::prefix('auth')->group(function () {
         // Rotas que NÃO precisam de token (públicas)
         Route::post('login', [AuthController::class, 'login']);
-        Route::post('register', [AuthController::class, 'register']);
 
         // Rotas que PRECISAM de token (protegidas pelo construtor)
         // O construtor do AuthController já protege estas rotas
         Route::post('logout', [AuthController::class, 'logout'])->middleware(['auth:api', 'tenant']);
-        Route::post('refresh', [AuthController::class, 'refresh'])->middleware(['auth:api:with_expired', 'tenant']);
+        Route::post('refresh', [AuthController::class, 'refresh'])->middleware(['tenant']);
         Route::post('me', [AuthController::class, 'me'])->middleware(['auth:api', 'tenant']);
     });
 
     // Grupo de autenticação pública
-
-    Route::post('/criar', function (Request $request) {
-        $user = new User;
-        $user->name = 'Valdi';
-        $user->email = 'valdi.ads@gmail.com';
-        $user->password = Hash::make('123456');
-        $user->tenant_id = 1; // Associa o usuário ao tenant com ID 1
-        $user->save();
-
-
-        return response()->json($user, 201);
-    });
+    Route::post('/signup', [TenantController::class, 'signup']);
 
     // Rotas Protegidas (explicitamente com middleware)
     Route::middleware(['auth:api', 'tenant'])->group(function () {

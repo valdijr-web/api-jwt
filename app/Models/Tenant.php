@@ -2,9 +2,10 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-
+#[Fillable(['trade_name', 'company_name', 'plan', 'status', 'document', 'document_type', 'whatsapp_number', 'is_active'])]
 class Tenant extends Model
 {
     public function users(): HasMany
