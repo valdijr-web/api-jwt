@@ -1,11 +1,10 @@
 <?php
 
 use App\Http\Controllers\Api\V1\AuthController;
+use App\Http\Controllers\Api\V1\PatientController;
 use App\Http\Controllers\Api\V1\TenantController;
-use App\Models\User;
-use Illuminate\Support\Facades\Hash;
+use App\Http\Controllers\Api\V1\UserController;
 use Illuminate\Support\Facades\Route;
-use Symfony\Component\HttpFoundation\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,14 +27,18 @@ Route::prefix('v1')->group(function () {
 
     // Grupo de autenticação pública
     Route::post('/signup', [TenantController::class, 'signup']);
-
     // Rotas Protegidas (explicitamente com middleware)
     Route::middleware(['auth:api', 'tenant'])->group(function () {
         // Grupos específicos por funcionalidade
         // Exemplo
         // Route::prefix('admin')->name('admin.')->middleware('role:admin')->group(function () {
-        //     Route::get('dashboard', [AdminController::class, 'dashboard']);
-        //     Route::apiResource('users', AdminUserController::class);
-        // });
+            //     Route::get('dashboard', [AdminController::class, 'dashboard']);
+            //     Route::apiResource('users', AdminUserController::class);
+            // });
+
+            //Route::apiResource('patients', PatientController::class);
+            Route::apiResource('users', UserController::class);
+            //Route::get('users',  [UserController::class, 'index']);
+
     });
 });
