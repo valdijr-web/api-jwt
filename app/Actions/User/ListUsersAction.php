@@ -15,7 +15,7 @@ class ListUsersAction
                 $q->where(function ($query) use ($search) {
                     $query->where('name', 'like', "%{$search}%")
                         ->orWhere('email', 'like', "%{$search}%")
-                        ->orWhere('id', 'like', "%{$search}%");
+                        ->orWhere('friendly_id', 'like', "%{$search}%");
                 });
             })
             ->when(

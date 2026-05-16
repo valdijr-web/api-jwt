@@ -13,6 +13,10 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->foreignId('tenant_id')->after('id')->constrained();
+            // Garante que, para o mesmo tenant, não existam códigos repetidos
+            $table->unique(['tenant_id', 'friendly_id']);
+            $table->unique(['email', 'tenant_id']);
+
         });
     }
 

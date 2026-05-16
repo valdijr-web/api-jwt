@@ -37,8 +37,10 @@ Route::prefix('v1')->group(function () {
             // });
 
             //Route::apiResource('patients', PatientController::class);
+            Route::delete('/users/bulk', [UserController::class, 'bulkDelete']);
+            Route::patch('users/{user}/status', [UserController::class, 'updateStatus']);
             Route::apiResource('users', UserController::class);
-            //Route::get('users',  [UserController::class, 'index']);
+            // Rota para exclusão em massa
 
     });
 });

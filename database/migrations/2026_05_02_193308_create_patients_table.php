@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('patients', function (Blueprint $table) {
             $table->id();
             $table->foreignId('tenant_id')->constrained();
+            $table->unsignedBigInteger('friendly_id'); //ID interno para cada tenant
 
             $table->string('name'); //nome completo do paciente
             $table->date('birth_date')->nullable(); //data de nascimento

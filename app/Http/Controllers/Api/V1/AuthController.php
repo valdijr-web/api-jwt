@@ -6,6 +6,7 @@ use App\Actions\Auth\LoginAction;
 use App\Actions\Auth\LogoutAction;
 use App\Actions\Auth\RefreshAction;
 use App\Actions\Auth\SetTokenCookieAction;
+use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
@@ -25,17 +26,24 @@ class AuthController extends Controller
         $this->middleware('auth:api')->except(['login', 'register', 'refresh' ]);
     }
 
-    public function login(Request $request): JsonResponse
+    public function login(LoginRequest $request): JsonResponse
     {
+        // 1. Verifica se excedeu o limite de tentativas (bloqueia com 422 automático se estourar)
+        $request->ensureIsNotRateLimited();
         $credentials = $request->only(['email', 'password']);
 
         try {
             $token = $this->loginAction->execute($credentials);
 
+            // Se o login deu certo, limpamos o contador de bloqueio do IP/E-mail
+            $request->clearRateLimiter();
+
             // Cria o cookie HttpOnly contendo o JWT
             $cookie = $this->setTokenCookieAction->execute($token);
             return $this->respondWithToken($token, $cookie);
         } catch (Exception $e) {
+            // Se falhou (Credenciais inválidas), contamos como um erro no Rate Limiter
+            $request->hitRateLimiter();
             return response()->json(['error' => $e->getMessage()], $e->getCode() ?: 401);
         }
     }
