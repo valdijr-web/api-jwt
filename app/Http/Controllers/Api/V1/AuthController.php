@@ -7,33 +7,27 @@ use App\Actions\Auth\LogoutAction;
 use App\Actions\Auth\RefreshAction;
 use App\Actions\Auth\SetTokenCookieAction;
 use App\Http\Requests\Auth\LoginRequest;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use Exception;
 use Illuminate\Http\JsonResponse;
-use \Symfony\Component\HttpFoundation\Cookie;
 
 class AuthController extends Controller
 {
     // Construtor para proteger as rotas, exceto login e registo
     public function __construct(
-        private LoginAction $loginAction,
-        private LogoutAction $logoutAction,
-        private RefreshAction $refreshAction,
         private SetTokenCookieAction $setTokenCookieAction
     ) {
         $this->middleware('auth:api')->except(['login', 'register', 'refresh' ]);
     }
 
-    public function login(LoginRequest $request): JsonResponse
+    public function login(LoginRequest $request, LoginAction $loginAction): JsonResponse
     {
         // 1. Verifica se excedeu o limite de tentativas (bloqueia com 422 automático se estourar)
         $request->ensureIsNotRateLimited();
-        $credentials = $request->only(['email', 'password']);
+        $credentials = $request->safe()->only(['email', 'password']);
 
         try {
-            $token = $this->loginAction->execute($credentials);
+            $token = $loginAction->execute($credentials);
 
             // Se o login deu certo, limpamos o contador de bloqueio do IP/E-mail
             $request->clearRateLimiter();
@@ -57,10 +51,10 @@ class AuthController extends Controller
         }
     }
 
-    public function logout(): JsonResponse
+    public function logout(LogoutAction $logoutAction): JsonResponse
     {
         try {
-            $this->logoutAction->execute();
+            $logoutAction->execute();
             $cookie = $this->setTokenCookieAction->execute('');
             return response()->json(['message' => 'Logout efetuado com sucesso'])->withCookie($cookie);
         } catch (Exception $e) {
@@ -69,10 +63,10 @@ class AuthController extends Controller
     }
 
     // Esta é a função que o NextAuth chamará quando o token expirar
-    public function refresh(): JsonResponse
+    public function refresh(RefreshAction $refreshAction): JsonResponse
     {
         try {
-            $newToken = $this->refreshAction->execute();
+            $newToken = $refreshAction->execute();
             $cookie = $this->setTokenCookieAction->execute($newToken);
             return $this->respondWithToken($newToken, $cookie);
         } catch (Exception $e) {

@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Api\V1;
 use App\Actions\Auth\SetTokenCookieAction;
 use App\Actions\Tenant\SignupTenantAction;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\SignupRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class TenantController extends Controller
 {
@@ -15,17 +17,12 @@ class TenantController extends Controller
         private SetTokenCookieAction $setTokenCookieAction
     ) {
     }
-    public function signup(Request $request): JsonResponse
+    public function signup(SignupRequest $request): JsonResponse
     {
-        $validated = $request->validate([
-            'trade_name' => ['required', 'string', 'max:255', 'min:1'],
-            'whatsapp_number' => ['required', 'string', 'max:255', 'min:1'],
-            'name'         => ['required', 'string', 'max:255'],
-            'email'        => ['required', 'email'],
-            'password'     => ['required', 'min:6'],
-        ]);
+
         try {
-            $result = $this->signupTenantAction->execute($validated);
+            Log::info("Teste: ", $request->validated());
+            $result = $this->signupTenantAction->execute($request->validated());
 
             $cookie = $this->setTokenCookieAction->execute($result['token']);
 

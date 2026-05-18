@@ -215,6 +215,13 @@ return [
         /**Usuário */
         'user_type' => 'tipo de usuário',
 
+        /**Signup */
+        'trade_name' => 'nome da empresa',
+        'whatsapp_number' => 'WhatsApp',
+        'name' => 'nome',
+        'email' => 'e-mail',
+        'password' => 'senha',
+
         /**Secretária */
         'secretary_name' => 'nome da secretária',
         'secretary_acronym' => 'sigla',

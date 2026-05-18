@@ -8,6 +8,8 @@ use App\Actions\User\ListUsersAction;
 use App\Actions\User\UpdateUserAction;
 use App\Actions\User\UpdateUserStatusAction;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Users\BulkDeleteRequest;
+use App\Http\Requests\Users\UpdateStatusRequest;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -113,15 +115,10 @@ class UserController extends Controller
     }
 
 
-    public function bulkDelete(Request $request, DeleteUsersAction $deleteUsers): JsonResponse
+    public function bulkDelete(BulkDeleteRequest $request, DeleteUsersAction $deleteUsers): JsonResponse
     {
-        $request->validate([
-            'ids' => 'required|array',
-            'ids.*' => 'exists:users,id'
-        ]);
-
         try {
-            $deletedCount = $deleteUsers->execute($request->ids);
+            $deletedCount = $deleteUsers->execute($request->validated()['user_ids']);
             $message = trans_choice(
                 '{1} :count usuário excluído com sucesso!|[2,*] :count usuários excluídos com sucesso!',
                 $deletedCount,
@@ -135,10 +132,10 @@ class UserController extends Controller
         }
     }
 
-    public function updateStatus(Request $request, User $user, UpdateUserStatusAction $action): JsonResponse
+    public function updateStatus(UpdateStatusRequest $request, User $user, UpdateUserStatusAction $action): JsonResponse
     {
         try {
-            $user = $action->execute($user, $request->boolean('is_active'));
+            $user = $action->execute($user, $request->validated()["is_active"]);
 
             return response()->json([
                 'message' => $user->is_active
