@@ -21,6 +21,14 @@ class User extends Authenticatable implements JWTSubject
     /** @use HasFactory<UserFactory> */
     use BelongsToTenant, HasFactory, Notifiable, SoftDeletes;
 
+    protected static function booted(): void
+    {
+        // O evento 'creating' roda ANTES do registro ser salvo no banco
+        static::creating(function (User $user) {
+            $user->friendly_id = self::nextFriendlyId();
+        });
+    }
+
     /**
      * Get the attributes that should be cast.
      *

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Actions\Tenant;
+namespace App\Actions\Tenants;
 
 use App\Models\Tenant;
 use App\Models\User;
@@ -31,7 +31,6 @@ class SignupTenantAction
 
             // 👤 Criar usuário dono (owner/admin)
             $user = new User();
-            $user->friendly_id = User::nextFriendlyId();
             $user->tenant_id = $tenant->id;
             $user->name = $data['name'];
             $user->email = $data['email'];

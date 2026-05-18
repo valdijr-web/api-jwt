@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\Actions\User\DeleteUserAction;
-use App\Actions\User\DeleteUsersAction;
-use App\Actions\User\ListUsersAction;
-use App\Actions\User\UpdateUserAction;
-use App\Actions\User\UpdateUserStatusAction;
+use App\Actions\Users\DeleteUserAction;
+use App\Actions\Users\DeleteUsersAction;
+use App\Actions\Users\ListUsersAction;
+use App\Actions\Users\UpdateUserAction;
+use App\Actions\Users\UpdateUserStatusAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Users\BulkDeleteRequest;
 use App\Http\Requests\Users\IndexUserRequest;
@@ -15,7 +15,6 @@ use App\Models\User;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 
 class UserController extends Controller
 {

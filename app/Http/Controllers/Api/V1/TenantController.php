@@ -3,11 +3,10 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Actions\Auth\SetTokenCookieAction;
-use App\Actions\Tenant\SignupTenantAction;
+use App\Actions\Tenants\SignupTenantAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\SignupRequest;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class TenantController extends Controller

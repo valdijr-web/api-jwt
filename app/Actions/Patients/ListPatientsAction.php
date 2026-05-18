@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Actions\Patient;
+namespace App\Actions\Patients;
 
 use App\Models\Patient;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;

@@ -1,5 +1,5 @@
 <?php
-namespace App\Actions\User;
+namespace App\Actions\Users;
 
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
