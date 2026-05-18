@@ -9,6 +9,7 @@ use App\Actions\User\UpdateUserAction;
 use App\Actions\User\UpdateUserStatusAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Users\BulkDeleteRequest;
+use App\Http\Requests\Users\IndexUserRequest;
 use App\Http\Requests\Users\UpdateStatusRequest;
 use App\Models\User;
 use Exception;
@@ -21,9 +22,9 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request, ListUsersAction $action): JsonResponse
+    public function index(IndexUserRequest $request, ListUsersAction $action): JsonResponse
     {
-        $filters = $request->only([
+        $filters = $request->safe()->only([
             'global_filter',
             'name',
             'email',
