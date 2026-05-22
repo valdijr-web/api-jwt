@@ -37,6 +37,8 @@ return new class extends Migration
 
             $table->timestamps();
             $table->softDeletes();
+
+            $table->unique(['tenant_id', 'friendly_id']);
         });
     }
 
