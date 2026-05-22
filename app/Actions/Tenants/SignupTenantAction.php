@@ -3,10 +3,10 @@
 namespace App\Actions\Tenants;
 
 use App\Models\Tenant;
+use App\Models\Unit;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\ValidationException;
 
 class SignupTenantAction
 {
@@ -14,24 +14,22 @@ class SignupTenantAction
     {
         return DB::transaction(function () use ($data) {
 
-            // 🔒 Validar e-mail global (SaaS geralmente não permite duplicado)
-            $emailExists = User::where('email', $data['email'])->exists();
-
-            if ($emailExists) {
-                throw ValidationException::withMessages([
-                    'email' => ['Já existe uma conta com o E-mail informado. Utilize outro E-mail ou faça login.'],
-                ]);
-            }
-
             // 🏢 Criar tenant
             $tenant = Tenant::create([
                 'trade_name' => $data['trade_name'],
                 'whatsapp_number' => $data['whatsapp_number'] ?? null,
             ]);
 
+            // Cria a Unidade Padrão do Tenant
+            $unit = Unit::create([
+                'tenant_id' => $tenant->id,
+                'name' => 'Unidade Principal',
+            ]);
+
             // 👤 Criar usuário dono (owner/admin)
             $user = new User();
             $user->tenant_id = $tenant->id;
+            $user->unit_id = $unit->id; // Associa o usuário à unidade criada
             $user->name = $data['name'];
             $user->email = $data['email'];
             $user->password = Hash::make($data['password']);

@@ -15,7 +15,9 @@ trait BelongsToTenant
 
         static::creating(function ($model) {
             if (empty($model->tenant_id)) {
-                $tenantId = app(TenantManager::class)->getTenantId();
+                $tenantId =  auth('api')->check()
+                    ? app(TenantManager::class)->getTenantId()
+                    : (request()->header('tenant_id') ?? request()->input('tenant_id'));
                 if ($tenantId) {
                     $model->tenant_id = $tenantId;
                 }
@@ -26,15 +28,5 @@ trait BelongsToTenant
     public function tenant(): BelongsTo
     {
         return $this->belongsTo(Tenant::class);
-    }
-
-    public static function nextFriendlyId(): int
-    {
-        $tenantId = app(TenantManager::class)->getTenantId();
-
-        // O 'static' aqui refere-se à classe que está usando a Trait (ex: Order)
-        return static::where('tenant_id', $tenantId)
-            ->lockForUpdate()
-            ->max('friendly_id') + 1;
     }
 }
