@@ -6,8 +6,8 @@ use App\Actions\Auth\SetTokenCookieAction;
 use App\Actions\Tenants\SignupTenantAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\SignupRequest;
+use Exception;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Log;
 
 class TenantController extends Controller
 {
@@ -20,14 +20,13 @@ class TenantController extends Controller
     {
 
         try {
-            Log::info("Teste: ", $request->validated());
             $result = $this->signupTenantAction->execute($request->validated());
 
             $cookie = $this->setTokenCookieAction->execute($result['token']);
 
             return response()->json($result, 201)->withCookie($cookie);
-        } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 400);
+        } catch (Exception $e) {
+            return response()->json(["error" => $e->getMessage() ], 400);
         }
 
     }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Actions\Users\CreateUserAction;
 use App\Actions\Users\DeleteUserAction;
 use App\Actions\Users\DeleteUsersAction;
 use App\Actions\Users\ListUsersAction;
@@ -9,6 +10,7 @@ use App\Actions\Users\UpdateUserAction;
 use App\Actions\Users\UpdateUserStatusAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Users\BulkDeleteRequest;
+use App\Http\Requests\Users\CreateUserRequest;
 use App\Http\Requests\Users\IndexUserRequest;
 use App\Http\Requests\Users\UpdateStatusRequest;
 use App\Models\User;
@@ -50,9 +52,14 @@ class UserController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(CreateUserRequest $request, CreateUserAction $createUserAction): JsonResponse
     {
-        //
+        $user = $createUserAction->execute($request->all());
+        // 2. Retorna a resposta da API
+        return response()->json([
+            'user' => $user,
+            'message' => 'Usuário criado com sucesso!',
+        ], 201);
     }
 
     /**
