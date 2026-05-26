@@ -10,6 +10,16 @@ class ListPatientsAction
     public function execute(array $filters = []): LengthAwarePaginator
     {
         $query = Patient::query()
+            ->when($filters['global_filter'] ?? null, function ($q, $search) {
+                $q->where(function ($query) use ($search) {
+                    $query->where('name', 'like', "%{$search}%")
+                        ->orWhere('cpf', 'like', "%{$search}%")
+                        ->orWhere('rg', 'like', "%{$search}%")
+                        ->orWhere('email', 'like', "%{$search}%")
+                        ->orWhere('phone_number', 'like', "%{$search}%")
+                        ->orWhere('friendly_id', 'like', "%{$search}%");
+                });
+            })
             ->when(
                 $filters['name'] ?? null,
                 fn($q, $name) =>
@@ -44,12 +54,13 @@ class ListPatientsAction
 
         // 📄 Paginação
         $perPage = $filters['per_page'] ?? 15;
+        $page = $filters['page'] ?? 1;
 
         return $query->paginate(
             $perPage,
             ['*'],
             'page',
-            $filters['page'] ?? 1
+            $page
         );
     }
 }

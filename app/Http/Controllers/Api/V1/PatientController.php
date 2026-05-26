@@ -2,29 +2,24 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Actions\Patients\CreatePatientAction;
 use App\Actions\Patients\ListPatientsAction;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Patients\IndexPatientRequest;
+use App\Http\Requests\Patients\StorePatientRequest;
 use App\Models\Patient;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class PatientController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request, ListPatientsAction $action): JsonResponse
+    public function index(IndexPatientRequest $request, ListPatientsAction $action): JsonResponse
     {
-        $filters = $request->only([
-            'name',
-            'email',
-            'created_from',
-            'created_to',
-            'sort_by',
-            'sort_direction',
-            'per_page',
-        ]);
-        $patients = $action->execute($filters);
+        $patients = $action->execute($request->validated());
 
         return response()->json($patients);
     }
@@ -40,9 +35,17 @@ class PatientController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StorePatientRequest $request, CreatePatientAction $action)
     {
-        //
+        // 1. Executa a Action passando APENAS os dados que passaram na validação do Request
+        $patient = $action->execute($request->validated());
+
+        // 2. Retorna a resposta JSON com o status 201 (Created)
+        // Se você usar API Resources (altamente recomendado), mude para: return (new PatientResource($patient))->response()->setStatusCode(201);
+        return response()->json([
+            'message' => 'Paciente cadastrado com sucesso!',
+            'data' => $patient
+        ], Response::HTTP_CREATED);
     }
 
     /**

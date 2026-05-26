@@ -107,36 +107,26 @@ class UserController extends Controller
      */
     public function destroy(User $user, DeleteUserAction $deleteUser): JsonResponse
     {
-        try {
-            $deleteUser->execute($user);
+        $deleteUser->execute($user);
 
-            return response()->json([
-                'message' => 'Usuário excluído com sucesso.'
-            ], 200);
-        } catch (Exception $e) {
-            return response()->json([
-                'error' => 'Erro ao excluir usuário.',
-                'details' => $e->getMessage()
-            ], 500);
-        }
+        return response()->json([
+            'message' => 'Usuário excluído com sucesso.'
+        ], 200);
     }
 
 
     public function bulkDelete(BulkDeleteRequest $request, DeleteUsersAction $deleteUsers): JsonResponse
     {
-        try {
-            $deletedCount = $deleteUsers->execute($request->validated()['user_ids']);
-            $message = trans_choice(
-                '{1} :count usuário excluído com sucesso!|[2,*] :count usuários excluídos com sucesso!',
-                $deletedCount,
-                ['count' => $deletedCount]
-            );
-            return response()->json([
-                'message' => $message
-            ], 200);
-        } catch (Exception $e) {
-            return response()->json(['error' => 'Falha ao deletar usuários'], 500);
-        }
+
+        $deletedCount = $deleteUsers->execute($request->validated()['user_ids']);
+        $message = trans_choice(
+            '{1} :count usuário excluído com sucesso!|[2,*] :count usuários excluídos com sucesso!',
+            $deletedCount,
+            ['count' => $deletedCount]
+        );
+        return response()->json([
+            'message' => $message
+        ], 200);
     }
 
     public function updateStatus(UpdateStatusRequest $request, User $user, UpdateUserStatusAction $action): JsonResponse

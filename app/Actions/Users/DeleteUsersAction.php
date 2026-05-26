@@ -1,7 +1,9 @@
 <?php
+
 namespace App\Actions\Users;
 
 use App\Models\User;
+use Error;
 use Illuminate\Support\Facades\DB;
 use Exception;
 
@@ -16,18 +18,22 @@ class DeleteUsersAction
      */
     public function execute(array $userIds): int
     {
-        return DB::transaction(function () use ($userIds) {
-            // Buscamos os usuários primeiro se precisarmos disparar
-            // eventos de model (como deletar fotos do S3, etc)
-            $users = User::whereIn('id', $userIds)->get();
+        try {
+            return DB::transaction(function () use ($userIds) {
+                // Buscamos os usuários primeiro se precisarmos disparar
+                // eventos de model (como deletar fotos do S3, etc)
+                $users = User::whereIn('id', $userIds)->get();
 
-            $count = 0;
-            foreach ($users as $user) {
-                $user->delete();
-                $count++;
-            }
+                $count = 0;
+                foreach ($users as $user) {
+                    $user->delete();
+                    $count++;
+                }
 
-            return $count;
-        });
+                return $count;
+            });
+        } catch (Exception $e) {
+            throw new Exception("Erro interno ao tentar excluir usuários.");
+        }
     }
 }

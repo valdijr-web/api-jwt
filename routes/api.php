@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\V1\AddressController;
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\PatientController;
 use App\Http\Controllers\Api\V1\TenantController;
@@ -40,7 +41,12 @@ Route::prefix('v1')->group(function () {
             Route::delete('/users/bulk', [UserController::class, 'bulkDelete']);
             Route::patch('users/{user}/status', [UserController::class, 'updateStatus']);
             Route::apiResource('users', UserController::class);
-            // Rota para exclusão em massa
+
+            Route::apiResource('patients', PatientController::class);
+
+            Route::get('/address/zipcode/{zip_code}', [AddressController::class, 'getAddressByZipCode'])->name('address.zipcode');
+
+
 
     });
 });
