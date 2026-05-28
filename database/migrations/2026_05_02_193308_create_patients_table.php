@@ -26,15 +26,6 @@ return new class extends Migration
             $table->string('phone_number')->nullable();//telefone
             $table->string('emergency_contact')->nullable();//telefone de emergência
 
-            $table->string('zip_code')->nullable(); //CEP
-            $table->string('street')->nullable(); //endereço
-            $table->string('address_number')->nullable(); //número
-            $table->string('complement')->nullable(); //complemento
-            $table->string('neighborhood')->nullable(); //bairro
-            $table->string('city')->nullable(); //cidade
-            $table->string('state')->nullable(); //estado
-            $table->string('country')->nullable(); //país
-
             $table->timestamps();
             $table->softDeletes();
 

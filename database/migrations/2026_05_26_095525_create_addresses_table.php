@@ -13,7 +13,25 @@ return new class extends Migration
     {
         Schema::create('addresses', function (Blueprint $table) {
             $table->id();
+
+            // Polimorfismo
+            $table->morphs('addressable');
+
+            // Endereço
+            $table->string('zip_code', 10)->nullable();
+            $table->string('street')->nullable();
+            $table->string('number', 20)->nullable();
+            $table->string('complement')->nullable();
+            $table->string('neighborhood')->nullable();
+            $table->string('city')->nullable();
+            $table->string('state', 2)->nullable();
+            $table->string('country', 50)->nullable();
+
             $table->timestamps();
+
+            // Índices úteis
+            $table->index('zip_code');
+            $table->index(['city', 'state']);
         });
     }
 

@@ -15,7 +15,12 @@ class AddressController extends Controller
         $address = $action->execute($request->validated('zip_code'));
 
         if ($address === []) {
-            return response()->json(['zip_code' => 'CEP não encontrado.'], 404);
+            return response()->json([
+                'message' => 'CEP não encontrado.',
+                'errors' => [
+                    'zip_code' => ['CEP não encontrado.']
+                ]
+            ], 422);
         }
 
         return response()->json($address);

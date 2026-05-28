@@ -7,9 +7,16 @@ use App\Traits\HasFriendlyId;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
+
 //escreva todos os campos da tabela patients no array do Fillable
-#[Fillable(['name', 'friendly_id', 'birth_date', 'gender', 'cpf', 'rg', 'email', 'phone_number', 'emergency_contact', 'zip_code', 'street', 'address_number', 'complement', 'neighborhood', 'city', 'state', 'country'])]
+#[Fillable(['name', 'friendly_id', 'birth_date', 'gender', 'cpf', 'rg', 'email', 'phone_number', 'emergency_contact'])]
 class Patient extends Model
 {
     use BelongsToTenant, HasFriendlyId, HasFactory;
+
+    public function address(): MorphOne
+    {
+        return $this->morphOne(Address::class, 'addressable');
+    }
 }

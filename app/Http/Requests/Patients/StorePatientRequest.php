@@ -52,15 +52,15 @@ class StorePatientRequest extends FormRequest
             'phone_number' => ['nullable', 'string', 'max:20'],
             'emergency_contact' => ['nullable', 'string', 'max:20'],
 
-            // Endereço
-            'zip_code' => ['nullable', 'string', 'max:9'], // Formato XXXXX-XXX
-            'street' => ['nullable', 'string', 'max:255'],
-            'address_number' => ['nullable', 'string', 'max:20'],
-            'complement' => ['nullable', 'string', 'max:255'],
-            'neighborhood' => ['nullable', 'string', 'max:100'],
-            'city' => ['nullable', 'string', 'max:100'],
-            'state' => ['nullable', 'string', 'size:2'], // Sigla do estado (PE, SP, PB...)
-            'country' => ['nullable', 'string', 'max:100'],
+            // Dados de Endereço (validação aninhada)
+            'address.zip_code' => ['required', 'string', 'max:9'],
+            'address.street' => ['required', 'string'],
+            'address.number' => ['required', 'string'],
+            'address.complement' => ['nullable', 'string'],
+            'address.neighborhood' => ['required', 'string'],
+            'address.city' => ['required', 'string'],
+            'address.state' => ['required', 'string', 'size:2'],
+            'address.country' => ['required', 'string', 'max:100'],
         ];
     }
 }
