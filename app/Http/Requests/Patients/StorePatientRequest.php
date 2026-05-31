@@ -60,7 +60,7 @@ class StorePatientRequest extends FormRequest
             'address.neighborhood' => ['required', 'string'],
             'address.city' => ['required', 'string'],
             'address.state' => ['required', 'string', 'size:2'],
-            'address.country' => ['required', 'string', 'max:100'],
+            'address.country' => ['nullable', 'string', 'max:100'],
         ];
     }
 }
