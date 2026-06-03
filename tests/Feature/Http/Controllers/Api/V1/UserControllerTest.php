@@ -120,46 +120,45 @@ class UserControllerTest extends TestCase
 
         // Assert: Verificamos a estrutura da resposta
         $response->assertStatus(200)
-    ->assertJsonStructure([
-        'current_page',
-        'data' => [
-            '*' => [
-                'id',
-                'tenant_id',
-                'friendly_id',
-                'unit_id',
-                'name',
-                'email',
-                'email_verified_at',
-                'is_active',
-                'created_at',
-                'updated_at',
-                'deleted_at',
-            ]
-        ],
-        'first_page_url',
-        'from',
-        'last_page',
-        'last_page_url',
-        'links' => [
-            '*' => [
-                'url',
-                'label',
-                'active',
-            ]
-        ],
-        'next_page_url',
-        'path',
-        'per_page',
-        'prev_page_url',
-        'to',
-        'total',
-    ]);
+            ->assertJsonStructure([
+                'current_page',
+                'data' => [
+                    '*' => [
+                        'id',
+                        'tenant_id',
+                        'friendly_id',
+                        'unit_id',
+                        'name',
+                        'email',
+                        'email_verified_at',
+                        'is_active',
+                        'created_at',
+                        'updated_at',
+                        'deleted_at',
+                    ]
+                ],
+                'first_page_url',
+                'from',
+                'last_page',
+                'last_page_url',
+                'links' => [
+                    '*' => [
+                        'url',
+                        'label',
+                        'active',
+                    ]
+                ],
+                'next_page_url',
+                'path',
+                'per_page',
+                'prev_page_url',
+                'to',
+                'total',
+            ]);
         // Verificamos os dados de paginação
         $this->assertEquals(1, $response->json('current_page'));
         $this->assertEquals(5, $response->json('per_page'));
         $this->assertEquals(16, $response->json('total')); // 15 + 1 (admin) criados no setUp
         $this->assertEquals(4, $response->json('last_page'));
     }
-
 }
