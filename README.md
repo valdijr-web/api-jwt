@@ -83,15 +83,6 @@ php artisan serve
 
 A API ficará disponível em `http://127.0.0.1:8000`.
 
-## Endpoints básicos
-
-- `POST /api/auth/login` — autenticação de usuário.
-- `POST /api/auth/register` — cadastro de usuário (quando disponível).
-- `GET /api/patients` — listagem de pacientes.
-- `POST /api/patients` — criação de paciente.
-- `GET /api/tenants` — listagem de clínicas/tenants.
-
-> Consulte o código em `routes/api.php` para ver todos os endpoints disponíveis.
 
 ## Testes
 
