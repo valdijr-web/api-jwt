@@ -13,6 +13,7 @@ use App\Http\Requests\Users\BulkDeleteRequest;
 use App\Http\Requests\Users\CreateUserRequest;
 use App\Http\Requests\Users\IndexUserRequest;
 use App\Http\Requests\Users\UpdateStatusRequest;
+use App\Http\Requests\Users\UpdateUserRequest;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -82,19 +83,9 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id, UpdateUserAction $updateUserAction)
+    public function update(UpdateUserRequest $request, User $user, UpdateUserAction $updateUserAction)
     {
-        $user = User::findOrFail($id);
-
-        // Validação básica
-        $validated = $request->validate([
-            'is_active' => 'boolean',
-            'name'   => 'string|max:255',
-            // outros campos...
-        ]);
-
-        // Executa a Action
-        $updatedUser = $updateUserAction->execute($user, $validated);
+        $updatedUser = $updateUserAction->execute($user, $request->validated());
 
         return response()->json([
             'message' => 'Usuário atualizado com sucesso',

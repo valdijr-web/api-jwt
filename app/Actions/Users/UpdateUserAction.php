@@ -1,16 +1,21 @@
 <?php
+
 namespace App\Actions\Users;
 
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class UpdateUserAction
 {
     public function execute(User $user, array $data): User
     {
+        if (! empty($data['password'])) {
+            $data['password'] = Hash::make($data['password']);
+        } else {
+            unset($data['password']);
+        }
         $user->update($data);
 
-        // Aqui você pode adicionar lógicas extras,
-        // como disparar eventos se o status mudar
         return $user;
     }
 }
