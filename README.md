@@ -1,58 +1,117 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# API JWT Laravel SaaS para Gestão de Clínicas
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Projeto backend em Laravel que oferece uma API JWT para um SaaS de gestão de clínicas. O foco é suportar autenticação, multi-tenancy de clínicas/unidades, usuários, pacientes, endereços e operações administrativas para um sistema de saúde.
 
-## About Laravel
+## Funcionalidades principais
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- Autenticação via JWT para API segura.
+- Gerenciamento de usuários.
+- Suporte a múltiplas clínicas/tenants.
+- Cadastro e gerenciamento de pacientes.
+- Gerenciamento de endereços de pacientes.
+- Estrutura de API RESTful para integração com apps web ou mobile.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Bibliotecas instaladas e utilizadas
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Este projeto utiliza principalmente:
 
-## Learning Laravel
+- `laravel/framework` — base do framework Laravel.
+- `phpunit/phpunit` — testes automatizados.
+- `guzzlehttp/guzzle` — cliente HTTP para serviços externos.
+- `fakerphp/faker` — geração de dados falsos para testes e seeders.
+- `fruitcake/laravel-cors` — suporte a CORS em API.
+- `php-open-source-saver/jwt-auth` — pacote para JWT.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+> Observação: as versões exatas e dependências completas estão definidas em `composer.json`.
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Requisitos
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+- PHP 8.3+ ou superior
+- Composer
+- Servidor web compatível com Laravel ou PHP embutido
+- Banco de dados MySQL/MariaDB ou outro suportado pelo Laravel
 
-## Agentic Development
+## Instalação e execução local
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+1. Clone o repositório:
 
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+git clone https://github.com/valdijr-web/api-jwt.git
+cd api-jwt
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+2. Instale as dependências PHP:
 
-## Contributing
+```bash
+composer install
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+3. Copie o arquivo de ambiente e ajuste as variáveis:
 
-## Code of Conduct
+```bash
+cp .env.example .env
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Edite `.env` com as configurações de banco de dados e JWT:
 
-## Security Vulnerabilities
+- `DB_CONNECTION`
+- `DB_HOST`
+- `DB_PORT`
+- `DB_DATABASE`
+- `DB_USERNAME`
+- `DB_PASSWORD`
+- `JWT_SECRET` ou outra chave/token configurada no pacote JWT
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+4. Gere a chave da aplicação:
 
-## License
+```bash
+php artisan key:generate
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+5. Execute as migrations e seeders:
+
+```bash
+php artisan migrate
+php artisan db:seed
+```
+
+6. Inicie o servidor de desenvolvimento:
+
+```bash
+php artisan serve
+```
+
+A API ficará disponível em `http://127.0.0.1:8000`.
+
+## Endpoints básicos
+
+- `POST /api/auth/login` — autenticação de usuário.
+- `POST /api/auth/register` — cadastro de usuário (quando disponível).
+- `GET /api/patients` — listagem de pacientes.
+- `POST /api/patients` — criação de paciente.
+- `GET /api/tenants` — listagem de clínicas/tenants.
+
+> Consulte o código em `routes/api.php` para ver todos os endpoints disponíveis.
+
+## Testes
+
+Execute os testes com:
+
+```bash
+php artisan test
+```
+
+## Estrutura do projeto
+
+- `app/Http/Controllers` — controladores da API.
+- `app/Models` — modelos Eloquent.
+- `app/Actions` — ações de domínio e regras de negócio.
+- `app/Services` — serviços e integrações externas.
+- `database/migrations` — migrações de banco de dados.
+- `database/factories` — factories para testes.
+- `database/seeders` — seeders iniciais.
+- `routes/api.php` — rotas da API.
+
+## Observações
+
+Este projeto é uma base para um backend SaaS de gestão de clínicas. Ele deve ser estendido com controle de permissões, validação de dados, testes adicionais e documentação de API para uso em produção.
