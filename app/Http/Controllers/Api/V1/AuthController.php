@@ -70,7 +70,8 @@ class AuthController extends Controller
             $cookie = $this->setTokenCookieAction->execute($newToken);
             return $this->respondWithToken($newToken, $cookie);
         } catch (Exception $e) {
-            return response()->json(['error' => 'Erro ao atualizar token ' . $e->getMessage()], 500);
+            $cookie = $this->setTokenCookieAction->execute("");
+            return response()->json(['error' => 'Token expirado e não pode mais ser renovado. Faça login novamente.'], 401)->withCookie($cookie);
         }
     }
 
