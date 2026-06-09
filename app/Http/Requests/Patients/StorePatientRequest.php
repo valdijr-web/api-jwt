@@ -31,35 +31,34 @@ class StorePatientRequest extends FormRequest
             // Dados Pessoais Básicos
             'name' => ['required', 'string', 'max:255'],
             'birth_date' => ['nullable', 'date', 'before_or_equal:today'],
-            'gender' => ['nullable', 'string', 'in:Masculino,Feminino,Outro'],
+            'gender' => ['required', 'string', 'in:Masculino,Feminino,Outro'],
 
             // Documentos com validação de unicidade isolada por Tenant
             'cpf' => [
                 'nullable',
                 'string',
                 'max:14', // Aceita com ou sem máscara (000.000.000-00)
-                Rule::unique('patients', 'cpf')->where(fn ($query) => $query->where('tenant_id', $tenantId))
+                Rule::unique('patients', 'cpf')->where('tenant_id', $tenantId)->whereNull('deleted_at'),
             ],
             'rg' => ['nullable', 'string', 'max:20'],
-
             // Contatos
             'email' => [
                 'nullable',
                 'email',
                 'max:255',
-                Rule::unique('patients', 'email')->where(fn ($query) => $query->where('tenant_id', $tenantId))
+                Rule::unique('patients', 'email')->where('tenant_id', $tenantId)->whereNull('deleted_at')
             ],
             'phone_number' => ['nullable', 'string', 'max:20'],
             'emergency_contact' => ['nullable', 'string', 'max:20'],
 
             // Dados de Endereço (validação aninhada)
-            'address.zip_code' => ['required', 'string', 'max:9'],
-            'address.street' => ['required', 'string'],
-            'address.number' => ['required', 'string'],
+            'address.zip_code' => ['nullable', 'string', 'max:9'],
+            'address.street' => ['nullable', 'string'],
+            'address.number' => ['nullable', 'string'],
             'address.complement' => ['nullable', 'string'],
-            'address.neighborhood' => ['required', 'string'],
-            'address.city' => ['required', 'string'],
-            'address.state' => ['required', 'string', 'size:2'],
+            'address.neighborhood' => ['nullable', 'string'],
+            'address.city' => ['nullable', 'string'],
+            'address.state' => ['nullable', 'string', 'size:2'],
             'address.country' => ['nullable', 'string', 'max:100'],
         ];
     }
