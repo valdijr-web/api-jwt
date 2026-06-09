@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Actions\Patients\CreatePatientAction;
+use App\Actions\Patients\DeletePatientAction;
 use App\Actions\Patients\DeletePatientsAction;
 use App\Actions\Patients\ListPatientsAction;
 use App\Http\Controllers\Controller;
@@ -77,9 +78,13 @@ class PatientController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Patient $patient)
+    public function destroy(Patient $patient, DeletePatientAction $deletePatientAction): JsonResponse
     {
-        //
+        $deletePatientAction->execute($patient);
+
+        return response()->json([
+            'message' => 'Paciente excluído com sucesso!'
+        ], 200);
     }
 
     public function bulkDelete(BulkDeletePatientRequest $request, DeletePatientsAction $deletePatientsAction): JsonResponse
