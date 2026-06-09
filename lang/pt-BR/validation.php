@@ -144,7 +144,7 @@ return [
     'starts_with' => 'O campo :attribute deve começar com um dos seguintes: :values.',
     'string' => 'O campo :attribute deve ser uma string.',
     'timezone' => 'O campo :attribute deve ser um fuso horário válido.',
-    'unique' => 'O campo :attribute já foi usado.',
+    'unique' => 'O campo :attribute já foi utilizado.',
     'uploaded' => 'O :attribute falhou ao carregar.',
     'uppercase' => 'O campo :attribute deve estar em letras maiúsculas.',
     'url' => 'O campo :attribute deve ser um URL válido.',
@@ -180,11 +180,8 @@ return [
     */
 
     'attributes' => [
-        'address' => 'endereço',
         'age' => 'idade',
         'body' => 'conteúdo',
-        'city' => 'cidade',
-        'country' => 'país',
         'date' => 'data',
         'day' => 'dia',
         'description' => 'descrição',
@@ -211,6 +208,23 @@ return [
         'username' => 'usuário',
         'year' => 'ano',
         'group' => 'grupo',
+        'birth_date' => 'data de nascimento',
+        'cpf' => 'CPF',
+        'rg' => 'RG',
+        'email' => 'e-mail',
+        'phone_number' => 'telefone',
+        'emergency_contact' => 'contato de emergência',
+
+        /** Endereço */
+        'address' => 'endereço',
+        'address.zip_code' => 'CEP',
+        'address.street' => 'rua',
+        'address.neighborhood' => 'bairro',
+        'address.state' => 'estado',
+        'address.city' => 'cidade',
+        'address.country' => 'país',
+        'address.number' => 'número do endereço',
+        'address.complement' => 'complemento',
 
         /**Usuário */
         'user_type' => 'tipo de usuário',
@@ -219,13 +233,8 @@ return [
         'trade_name' => 'nome da empresa',
         'whatsapp_number' => 'WhatsApp',
         'name' => 'nome',
-        'email' => 'e-mail',
         'password' => 'senha',
 
-        /**Secretária */
-        'secretary_name' => 'nome da secretária',
-        'secretary_acronym' => 'sigla',
-        'secretary' => 'secretária',
 
         /**Diretoria */
         'directorate' => 'diretoria',
@@ -235,47 +244,6 @@ return [
         /** Permissões */
         'role' => 'perfil',
         'permission' => 'permissão',
-
-
-        /** Patrimônios */
-        'patrimony_location_name' => 'nome do local',
-        'patrimony_asset_name' => 'nome do bem',
-        'requester_name' => 'nome do solicitante',
-        'requester_email' => 'email do solicitante',
-        'requester_phone_number' => 'número do solicitante',
-        'patrimony_requester_taxpayer_id_number' => 'CPF do solicitante',
-        'company_name' => 'razão social',
-        'trading_name' => 'nome fantasia',
-        'patrimony_supplier_national_tax_id_number' => 'CNPJ do fornecedor',
-        'patrimony_asset' => 'bem',
-        'toppled_number' => 'tombo',
-        'patrimony_invoice_number' => 'número da nota fiscal',
-        'invoice_emission_date' => 'data de emissão',
-        'invoice_value' => 'valor da nota',
-        'invoice_file' => 'arquivo',
-        'statement_of_agreement' => 'número do empenho',
-        'notice_of_settlement' => 'número da liquidação',
-        'patrimony_supplier' => 'fornecedor',
-        'term_number' => 'número do termo',
-        'trade_number' => 'número do ofício',
-        'patrimony_location' => 'local',
-        'patrimony_requesters' => 'solicitantes',
-        'patrimonies' => 'patrimônios',
-        'movement_date' => 'data da movimentação',
-        'patrimony_invoice' => 'nota fiscal',
-        'reallocated_date' => 'data do remanejamento',
-        'trade_file' => 'arquivo do ofício',
-        'reallocated_date' => 'data do remanejamento',
-        'patrimony_location_destiny' => 'local',
-        'patrimony_requester' => 'solicitante',
-
-
-        /**Credores*/
-        'creditor_name' => 'nome do credor',
-        'creditor_responsible' => 'credor resposável',
-        'creditor_email' => 'email do credor',
-        'creditor_phone' => 'telefone do credor',
-        'creditor_phone' => 'telefone do credor',
 
         /** Contratos */
         'get_contract_type_id' => 'tipo de contrato',
@@ -301,66 +269,11 @@ return [
         /** Prestadores da Saúde*/
         'taxpayer_id_number_patient' => 'CPF do Paciente',
 
-        /** Usuário Profissional de Saúde */
-        'healthcare_professional_user' => 'Usuário Profissional de Saúde',
-        'health_establishment_trading_name' => 'Nome do Estabelecimento',
-        'health_establishment_own_cnpj' => 'CNPJ do Estabelecimento',
-        'health_establishment_cnes' => 'CNES do Estabelecimento',
-        'health_establishment_zip_code' => 'CEP do Estabelecimento',
-        'health_establishment_address' => 'Endereço do Estabelecimento',
-        'health_establishment_number' => 'Número do Estabelecimento',
-        'health_establishment_neighborhood' => 'Bairro do Estabelecimento',
-        'health_establishment_city' => 'Cidade do Estabelecimento',
-        'health_establishment_state' => 'UF do Estabelecimento',
-        'services' => 'Serviços',
-        'team' => 'Equipe',
-        'service_provider_name' => 'Nome do Prestador de Serviços',
-        'service_provider_cpf' => 'CPF do Prestador de Serviços',
-        'service_provider_cbo_description' => 'CBO do Prestador de Serviços',
-        'service_provider_cns' => 'CNS do Prestador de Serviços',
-        'service_classification' => 'Classificação do Serviço',
-        'service_procedure' => 'Processo do Serviço',
-        'service_table_value' => 'Valor do Serviço',
-        'service_description' => 'Descrição do Serviço',
-        'user_type' => 'Tipo de Usuário',
-        'health_establishment' => 'Estabelecimento de Saúde',
-        'vacancy_start' => 'Início dos atendimentos',
-        'vacancy_finish' => 'Término dos atendimentos',
-        'vacancy_dates' => 'Datas das vagas',
-        'vacancy_duration' => 'Tempo de atendimento',
-        'service_providers' => 'Prestadores de Serviços',
-        'vacancy_date' => 'Data da vaga',
-        'regulator_comment' => 'Observação do Regulador',
-
         /** Serviço */
         'edit_modal_service_select' => 'serviço',
         'edit_modal_service_value' => 'valor',
         'service_value' => 'valor',
         'service' => 'serviço',
-
-        /** Paciente Avulso */
-        'patient_name' => 'nome do paciente',
-        'patient_cpf' => 'CPF do paciente',
-        'patient_cns' => 'CNS do paciente',
-        'patient_birth' => 'data de nascimento',
-        'patient_sex' => 'sexo',
-        'patient_phone' => 'telefone',
-        'patient_mother' => 'mãe',
-        'patient_father' => 'pai',
-        'patient_address' => 'endereço',
-        'patient_neighborhood' => 'bairro',
-        'patient_zip_code' => 'CEP',
-        'patient_ibge' => 'código do IBGE',
-        'patient_race_color' => 'raça ou cor',
-        'patient_ethnicity' => 'etnia',
-        'patient_country_cadsus' => 'nacionalidade',
-        'patient_address_number' => 'número do endereço',
-        'patient_address_complement' => 'complemento',
-        'patient_address_dne' => 'DNE',
-        'patient_email' => 'e-mail',
-        'patient_cellphone' => 'telefone celular',
-        'patient_contact_phone' => 'telefone de contato',
-        'loose_request_file' => 'anexo',
 
         'g-recaptcha-response' => 'ReCaptcha',
 
