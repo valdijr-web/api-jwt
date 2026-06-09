@@ -109,7 +109,7 @@ class UserController extends Controller
     public function bulkDelete(BulkDeleteRequest $request, DeleteUsersAction $deleteUsers): JsonResponse
     {
 
-        $deletedCount = $deleteUsers->execute($request->validated()['user_ids']);
+        $deletedCount = $deleteUsers->execute($request->validated()['ids']);
         $message = trans_choice(
             '{1} :count usuário excluído com sucesso!|[2,*] :count usuários excluídos com sucesso!',
             $deletedCount,

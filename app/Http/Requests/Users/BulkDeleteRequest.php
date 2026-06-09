@@ -23,8 +23,8 @@ class BulkDeleteRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_ids' => ['required', 'array', 'min:1'],
-            'user_ids.*' => ['required', 'integer', 'exists:users,id'],
+            'ids' => ['required', 'array', 'min:1'],
+            'ids.*' => ['required', 'integer', 'exists:users,id'],
         ];
     }
 }
