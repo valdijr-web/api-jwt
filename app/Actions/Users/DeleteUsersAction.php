@@ -3,7 +3,6 @@
 namespace App\Actions\Users;
 
 use App\Models\User;
-use Error;
 use Illuminate\Support\Facades\DB;
 use Exception;
 
