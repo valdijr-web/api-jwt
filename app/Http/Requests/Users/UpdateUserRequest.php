@@ -25,18 +25,12 @@ class UpdateUserRequest extends FormRequest
      */
     public function rules(): array
     {
-        \DB::listen(function ($query) {
-            Log::info($query->sql);
-            Log::info($query->bindings);
-        });
         $tenantId = app(TenantManager::class)->getTenantId();
         $id = $this->route('user')->id; // Obtém o ID do usuário da rota
         // Se você passou um objeto (Route Model Binding), pegue o ID dele:
         if ($id instanceof \App\Models\User) {
             $id = $id->id;
         }
-        Log::info("Validando atualização do usuário ID: $id");
-        Log::info("Tenant: $tenantId");
         return [
             'name' => ['required', 'string', 'max:255', 'min:2'],
             'email' => [
@@ -44,15 +38,10 @@ class UpdateUserRequest extends FormRequest
                 'string',
                 'email',
                 'max:255',
-                // Garante que o e-mail seja único apenas dentro do mesmo tenant
-                // Rule::unique('users', 'email')->where(function ($query) use ($tenantId, $id) {
-                //     return $query->where('tenant_id', $tenantId)
-                //         ->ignore(2); // Exclui o usuário atual da verificação de unicidade
-                // }),
                 Rule::unique('users')
                     ->ignore($id)
                     ->where('tenant_id', $tenantId)
-                    ->whereNull('deleted_at'), // O ignore substitui o ->where('id', '!=', $id)
+                    ->whereNull('deleted_at'),
             ],
             'password' => ['nullable', 'string', 'min:8'],
         ];
