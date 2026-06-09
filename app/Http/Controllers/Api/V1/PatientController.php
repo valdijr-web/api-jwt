@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Actions\Patients\CreatePatientAction;
+use App\Actions\Patients\DeletePatientsAction;
 use App\Actions\Patients\ListPatientsAction;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Patients\BulkDeletePatientRequest;
 use App\Http\Requests\Patients\IndexPatientRequest;
 use App\Http\Requests\Patients\StorePatientRequest;
 use App\Models\Patient;
@@ -78,5 +80,18 @@ class PatientController extends Controller
     public function destroy(Patient $patient)
     {
         //
+    }
+
+    public function bulkDelete(BulkDeletePatientRequest $request, DeletePatientsAction $deletePatientsAction): JsonResponse
+    {
+        $deletedCount = $deletePatientsAction->execute($request->validated()['ids']);
+        $message = trans_choice(
+            '{1} :count paciente excluído com sucesso!|[2,*] :count pacientes excluídos com sucesso!',
+            $deletedCount,
+            ['count' => $deletedCount]
+        );
+        return response()->json([
+            'message' => $message
+        ], 200);
     }
 }

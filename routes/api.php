@@ -42,6 +42,7 @@ Route::prefix('v1')->group(function () {
             Route::patch('users/{user}/status', [UserController::class, 'updateStatus']);
             Route::apiResource('users', UserController::class);
 
+             Route::delete('/patients/bulk', [PatientController::class, 'bulkDelete']);
             Route::apiResource('patients', PatientController::class);
 
             Route::get('/address/zipcode/{zip_code}', [AddressController::class, 'getAddressByZipCode'])->name('address.zipcode');
